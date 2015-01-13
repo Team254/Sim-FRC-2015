@@ -21,23 +21,21 @@ public class SimRobot extends SimRobotBase {
   @Override
   public void startRobotSim() {
 	  System.out.println("starting robot sim!");
+	  
+	  double updateRate = 100.0; //Hz
 	  double currentPosition = 0;
 	  double speedOfActuator = 4.0; // Inches per second
 	  
 	  double scaleFactorToEncoder = 1250;
+	 
 	  while (true) {
-		  
-		  
-		  
-		  currentPosition += ((p1.get() * speedOfActuator) / 100.0);
+		  currentPosition += ((p1.get() * speedOfActuator) / updateRate);
 		  
 		  int newEnc = (int)(currentPosition * scaleFactorToEncoder);
 		  
-		  System.out.println(p1.get() + " | " + currentPosition + " | " + newEnc);
-		  
 		  es.set(newEnc);
 		  
-		  Timer.delay(.01);
+		  Timer.delay(1.0 / updateRate);
 	  }
   }
 
