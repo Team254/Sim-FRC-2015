@@ -19,14 +19,19 @@ public class DCMotor {
 	 * @param efficiency The efficiency of the transmission.
 	 * @return A DCMotor representing the RS775 transmission.
 	 */
-	static DCMotor makeRS775Transmission(int num_motors, double gear_reduction, double efficiency) {
+	static DCMotor makeRS775() {
 		// TODO(jared)
 		final double KT = 0.009;  // 9 mNm / A
 		final double KV = 1083.0 * (Math.PI * 2.0) / 60.0;  // 1083 rpm/V in rad/sec/V
 		final double RESISTANCE = (18.0 / 130.0);  // Rated for 130A stall @ 18V
-		return new DCMotor(num_motors * gear_reduction * efficiency * KT,
-				KV / gear_reduction,
-				RESISTANCE / num_motors);
+		return new DCMotor(KT, KV, RESISTANCE);
+	}
+	
+	static DCMotor makeTransmission(DCMotor motor, int num_motors, double gear_reduction,
+			double efficiency) {
+		return new DCMotor(num_motors * gear_reduction * efficiency * motor.m_kt,
+				motor.m_kv / gear_reduction,
+				motor.m_resistance / num_motors);
 	}
 	
 	/**

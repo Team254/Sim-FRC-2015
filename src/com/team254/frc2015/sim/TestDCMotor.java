@@ -26,7 +26,7 @@ public class TestDCMotor {
 	
 	@Test
 	public void testRS775() {
-		DCMotor rs775 = DCMotor.makeRS775Transmission(1, 10.0, 1.0);
+		DCMotor rs775 = DCMotor.makeTransmission(DCMotor.makeRS775(), 1, 10.0, 1.0);
 		
 		// Apply a positive voltage and small load.
 		System.out.println("Voltage=6V, Load=.01 kg*m^2");
@@ -99,7 +99,7 @@ public class TestDCMotor {
 		
 		
 		// Add a second 775.
-		rs775 = DCMotor.makeRS775Transmission(2, 10.0, 1.0);
+		rs775 = DCMotor.makeTransmission(DCMotor.makeRS775(), 2, 10.0, 1.0);
 		System.out.println("(2 motors) Voltage=12V, Load=1.0 kg*m^2");
 		for (int i = 0; i < 1000; ++i) {
 			rs775.step(12.0, 1.0, 0.01);
@@ -122,7 +122,7 @@ public class TestDCMotor {
 		final_velocity = rs775.getVelocity();
 
 		// Make it less efficient.
-		rs775 = DCMotor.makeRS775Transmission(2, 10.0, .8);
+		rs775 = DCMotor.makeTransmission(DCMotor.makeRS775(), 2, 10.0, 0.8);
 		System.out.println("(2 motors, 80% efficient) Voltage=12V, Load=1.0 kg*m^2");
 		for (int i = 0; i < 1000; ++i) {
 			rs775.step(12.0, 1.0, 0.01);
