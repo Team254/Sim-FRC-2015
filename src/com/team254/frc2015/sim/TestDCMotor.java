@@ -31,7 +31,7 @@ public class TestDCMotor {
 		// Apply a positive voltage and small load.
 		System.out.println("Voltage=6V, Load=.01 kg*m^2");
 		for (int i = 0; i < 1000; ++i) {
-			rs775.step(6.0, 0.01, 0.01);
+			rs775.step(6.0, 0.01, 0.0, 0.01);
 			
 			if (i % 100 == 0) {
 				System.out.print("Time: " + 0.01*i);
@@ -48,7 +48,7 @@ public class TestDCMotor {
 		System.out.println("Voltage=12V, Load=.01 kg*m^2");
 		rs775.reset(0, 0, 0);
 		for (int i = 0; i < 1000; ++i) {
-			rs775.step(12.0, 0.01, 0.01);
+			rs775.step(12.0, 0.01, 0.0, 0.01);
 			
 			if (i % 100 == 0) {
 				System.out.print("Time: " + 0.01*i);
@@ -66,7 +66,7 @@ public class TestDCMotor {
 		rs775.reset(0, 0, 0);
 		double start_current = 0;
 		for (int i = 0; i < 1000; ++i) {
-			rs775.step(12.0, 1.0, 0.01);
+			rs775.step(12.0, 1.0, 0.0, 0.01);
 			if (i == 0) {
 				start_current = rs775.getCurrent();
 			}
@@ -86,7 +86,7 @@ public class TestDCMotor {
 		System.out.println("Voltage=-12V, Load=1.0 kg*m^2");
 		rs775.reset(0, 0, 0);
 		for (int i = 0; i < 1000; ++i) {
-			rs775.step(-12.0, 1.0, 0.01);
+			rs775.step(-12.0, 1.0, 0.0, 0.01);
 			
 			if (i % 100 == 0) {
 				System.out.print("Time: " + 0.01*i);
@@ -102,7 +102,7 @@ public class TestDCMotor {
 		rs775 = DCMotor.makeTransmission(DCMotor.makeRS775(), 2, 10.0, 1.0);
 		System.out.println("(2 motors) Voltage=12V, Load=1.0 kg*m^2");
 		for (int i = 0; i < 1000; ++i) {
-			rs775.step(12.0, 1.0, 0.01);
+			rs775.step(12.0, 1.0, 0.0, 0.01);
 			if (i == 0) {
 				// We expect to draw twice the starting current.
 				assertEquals(rs775.getCurrent(), 2.0 * start_current, EPS);
@@ -125,7 +125,7 @@ public class TestDCMotor {
 		rs775 = DCMotor.makeTransmission(DCMotor.makeRS775(), 2, 10.0, 0.8);
 		System.out.println("(2 motors, 80% efficient) Voltage=12V, Load=1.0 kg*m^2");
 		for (int i = 0; i < 1000; ++i) {
-			rs775.step(12.0, 1.0, 0.01);
+			rs775.step(12.0, 1.0, 0.0, 0.01);
 			
 			if (i % 100 == 0) {
 				System.out.print("Time: " + 0.01*i);
@@ -139,4 +139,36 @@ public class TestDCMotor {
 		assert(rs775.getPosition() + EPS < final_position);
 	}
 
+	@Test
+	public void testGravity() {
+		DCMotor rs775 = DCMotor.makeTransmission(DCMotor.makeRS775(), 1, 10.0, 1.0);
+		System.out.println("Voltage=12V, Load=0.4 kg*m^2, .2m pulley against gravity");
+		for (int i = 0; i < 1000; ++i) {
+			// Assume pulling against gravity.
+			// Load is a 1kg mass on .2m pulley.
+			rs775.step(12.0, 0.04, -9.8/.2, 0.01);
+			
+			if (i % 100 == 0) {
+				System.out.print("Time: " + 0.01*i);
+				System.out.print(", Position: " + rs775.getPosition());
+				System.out.print(", Velocity: " + rs775.getVelocity());
+				System.out.println(", Current: " + rs775.getCurrent());
+			}
+		}
+
+		System.out.println("Voltage=-12V, Load=0.4 kg*m^2, .2m pulley with gravity");
+		rs775.reset(0, 0, 0);
+		for (int i = 0; i < 1000; ++i) {
+			// Assume pulling with gravity.
+			// Load is a 1kg mass on .2m pulley.
+			rs775.step(-12.0, 0.04, -9.8/.2, 0.01);
+			
+			if (i % 100 == 0) {
+				System.out.print("Time: " + 0.01*i);
+				System.out.print(", Position: " + rs775.getPosition());
+				System.out.print(", Velocity: " + rs775.getVelocity());
+				System.out.println(", Current: " + rs775.getCurrent());
+			}
+		}
+	}
 }

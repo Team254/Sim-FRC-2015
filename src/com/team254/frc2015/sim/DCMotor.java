@@ -1,5 +1,9 @@
 package com.team254.frc2015.sim;
 
+/**
+ * Simulates a DC motor using a simplified model appropriate for systems with slow time constants.
+ * @author jared
+ */
 public class DCMotor {
 	// Motor constants
 	protected final double m_kt;
@@ -20,7 +24,6 @@ public class DCMotor {
 	 * @return A DCMotor representing the RS775 transmission.
 	 */
 	static DCMotor makeRS775() {
-		// TODO(jared)
 		final double KT = 0.009;  // 9 mNm / A
 		final double KV = 1083.0 * (Math.PI * 2.0) / 60.0;  // 1083 rpm/V in rad/sec/V
 		final double RESISTANCE = (18.0 / 130.0);  // Rated for 130A stall @ 18V
@@ -67,9 +70,11 @@ public class DCMotor {
 	 * 
 	 * @param applied_voltage Voltage applied to the motor (V)
 	 * @param load Load applied to the motor (kg*m^2)
+	 * @param acceleration The external acceleration applied to the load
+	 * (ex. due to gravity) (rad/s^2).
 	 * @param timestep How long the input is applied (s)
 	 */
-	public void step(double applied_voltage, double load, double timestep) {
+	public void step(double applied_voltage, double load, double acceleration, double timestep) {
 		/*
 		 * Using the 971-style first order system model.
 		 * V = I * R + Kv * w
@@ -80,7 +85,7 @@ public class DCMotor {
          *
          * dw/dt = (V - Kv * w) * Kt / (R * J)
 		 */
-		double acceleration = (applied_voltage - m_velocity / m_kv) * m_kt /
+		acceleration += (applied_voltage - m_velocity / m_kv) * m_kt /
 				(m_resistance * load);
 		m_velocity += acceleration * timestep;
 		m_position += m_velocity * timestep + .5 * acceleration * timestep * timestep;
