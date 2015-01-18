@@ -48,26 +48,31 @@ public class TestServoMechanism {
 		assertEquals(encoder.getRaw(), 0);
 		assert(mechanism.withinLowerLimit());
 		
-		// Simple 100Hz PD controller.
+		// Simple 100Hz PID controller.
 		final double period = 0.01;
-		final double setpoint = 1.5;
-		final double proportional_gain = 0.9;
-		final double derivative_gain = 0.01;
-		double last_error = 1.5;
+		final double setpoint = 1.5;  // Do a 1.5m lift
+		final double proportional_gain = 10.0;
+		final double integral_gain = 100.0;
+		final double derivative_gain = 0.2;
+		double last_error = setpoint;
+		double error_sum = 0;
 		int last_encoder = 0;
-		for (int i = 0; i < 1000; ++i) {
+		for (int i = 0; i < 200; ++i) {
 			double error = setpoint - encoder.getRaw() * encoder_linear_distance_per_pulse;
 			double derivative = (error - last_error) / period;
 			last_error = error;
-			motor.set(proportional_gain * error + derivative_gain * derivative);
+			if (proportional_gain * error < 1.0) {
+				error_sum += error * period;
+			}
+			motor.set(proportional_gain * error + integral_gain * error_sum + derivative_gain * derivative);
 			last_encoder = encoder.getRaw();
-			mechanism.step(12.0, 0.0, period);
+			mechanism.step(12.0, -9.8/pulley_radius, period);  // Gravity reacting against the lift
 			double velocity = (encoder.getRaw() - last_encoder) * encoder_linear_distance_per_pulse / period;
 			if (i % 10 == 0) {
 				System.out.println("Time: " + i * period + ", Error: " + error + ", Command: " + motor.get() + ", Velocity: " + velocity);
 			}
 		}
-		assertEquals(encoder.getRaw() * encoder_linear_distance_per_pulse, 1.5, 1E-3);
+		assertEquals(encoder.getRaw() * encoder_linear_distance_per_pulse, setpoint, 1E-3);
 	}
 
 }
