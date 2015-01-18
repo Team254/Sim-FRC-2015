@@ -22,7 +22,7 @@ public class SimRobot extends SimRobotBase {
   public void startRobotSim() {
 	  System.out.println("starting robot sim!");
 	  
-	  double updateRate = 300.0; // Hz
+	  double updateRate = 300.0; //Hz
 	  double currentPosition = 0;
 	  double speedOfActuator = 4.0; // Inches per second
 	  
