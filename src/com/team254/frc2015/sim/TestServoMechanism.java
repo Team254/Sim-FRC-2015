@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.PWMObserver;
 import edu.wpi.first.wpilibj.Victor;
 
 public class TestServoMechanism {
-	private final double EPS = 1E-9;
-	
 	@Test
 	public void testServoMechanism() {
 		// Make the motor and encoder.
