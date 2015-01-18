@@ -71,7 +71,7 @@ public class DCMotor {
 	 * @param applied_voltage Voltage applied to the motor (V)
 	 * @param load Load applied to the motor (kg*m^2)
 	 * @param acceleration The external acceleration applied to the load
-	 * (ex. due to gravity) (rad/s^2).
+	 * (ex. due to gravity) (rad/s^2)
 	 * @param timestep How long the input is applied (s)
 	 */
 	public void step(double applied_voltage, double load, double acceleration, double timestep) {

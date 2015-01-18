@@ -15,7 +15,11 @@ public class ServoMechanism {
 	protected double m_load;
 	protected Limits m_limits;
 	
-	public class Limits {
+	public static class Limits {
+		public Limits(double min, double max) {
+			min_position = min;
+			max_position = max;
+		}
 		public double min_position = -1E9;
 		public double max_position = 1E9;
 	}
