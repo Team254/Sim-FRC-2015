@@ -89,7 +89,7 @@ public class ServoMechanism {
 	 * Check the lower position limit.
 	 * @return True if the current position is greater than or equal to the minimum.
 	 */
-	public boolean withinLowerLimit() {
+	public boolean withinLowerLimits() {
 		return m_model.getPosition() >= m_limits.min_position;
 	}
 	

@@ -28,7 +28,7 @@ public class TestServoMechanism {
 				encoder_angular_distance_per_pulse, transmission, .007, new ServoMechanism.Limits(0.0, 1.8));
 	
 		// Check against limits.
-		assert(mechanism.withinLowerLimit());
+		assert(mechanism.withinLowerLimits());
 		assert(mechanism.withinUpperLimits());
 		
 		// Drive the load down.
@@ -37,7 +37,7 @@ public class TestServoMechanism {
 		mechanism.step(12.0, 0.0, 0.01);
 		mechanism.step(12.0, 0.0, 0.01);
 		
-		assertFalse(mechanism.withinLowerLimit());
+		assertFalse(mechanism.withinLowerLimits());
 		assert(mechanism.withinUpperLimits());
 		
 		// Check encoder went in reverse.
@@ -46,7 +46,7 @@ public class TestServoMechanism {
 		// Reset the mechanism.
 		mechanism.reset(0.0);
 		assertEquals(encoder.getRaw(), 0);
-		assert(mechanism.withinLowerLimit());
+		assert(mechanism.withinLowerLimits());
 		
 		// Simple 100Hz PID controller.
 		final double period = 0.01;
