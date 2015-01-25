@@ -24,7 +24,7 @@ public class TestServoMechanism {
 		// Make a servo mechanism.
 		DCMotor transmission = DCMotor.makeTransmission(DCMotor.makeRS775(), 2, 10.5, 0.8);
 		// Load is nominally 1kg*m^2
-		ServoMechanism mechanism = new ServoMechanism(new PWMObserver(1), new EncoderSetter(1, 2),
+		ServoMechanism mechanism = new ServoMechanism(new PWMObserver(1), new EncoderSetter(1, 2), 0,
 				encoder_angular_distance_per_pulse, transmission, .007, new ServoMechanism.Limits(0.0, 1.8));
 	
 		// Check against limits.
