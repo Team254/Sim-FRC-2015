@@ -5,6 +5,8 @@ import java.util.TimerTask;
 import com.team254.fakewpilib.SimRobotBase;
 import com.team254.frc2015.Constants;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalInputSetter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.EncoderSetter;
 import edu.wpi.first.wpilibj.PWMObserver;
@@ -26,6 +28,11 @@ public class SimRobot extends SimRobotBase {
     EncoderSetter top_carriage_encoder = new EncoderSetter(
             Constants.kTopCarriageEncoderDIOA,
             Constants.kTopCarriageEncoderDIOB);
+    DigitalInputSetter bottom_carriage_hall_effect = new DigitalInputSetter(
+    		Constants.kBottomCarriageHomeDIO);
+    DigitalInputSetter top_carriage_hall_effect = new DigitalInputSetter(
+    		Constants.kTopCarriageHomeDIO);
+
     double elevator_rads_per_tick = .25 * 2.0 * Math.PI
             / Constants.kElevatorEncoderCountsPerRev;  // 4x decoding
 
@@ -79,6 +86,10 @@ public class SimRobot extends SimRobotBase {
                             / Constants.kElevatorPulleyRadiusInches,
                             1.0 / updateRate);
                 }
+                if (bottom_carriage.m_output.getEncoder() != null) {
+                	int enc_val = bottom_carriage.m_output.getEncoder().get();
+                	bottom_carriage_hall_effect.set(enc_val > -50 && enc_val < 50); // about half an inch of travel, homing sensor
+                }
 
                 if (SolenoidStore.getSolenoid(1).get()) {
                     top_carriage.setLoad(10.0 * KG_PER_LB
@@ -88,7 +99,11 @@ public class SimRobot extends SimRobotBase {
                             / Constants.kElevatorPulleyRadiusInches,
                             1.0 / updateRate);
                 }
-                
+                if (top_carriage.m_output.getEncoder() != null) {
+                	int enc_val = top_carriage.m_output.getEncoder().get();
+                	top_carriage_hall_effect.set(enc_val > -50 && enc_val < 50); // about half an inch of travel, homing sensor
+                }
+
                 loop_counter++;
                 if (loop_counter % 100 == 0) {
                     if (!top_carriage.withinLowerLimits()) {
