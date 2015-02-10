@@ -35,7 +35,7 @@ public class SimRobot extends SimRobotBase {
 
     double elevator_rads_per_tick = .25 * 2.0 * Math.PI
             / Constants.kElevatorEncoderCountsPerRev;  // 4x decoding
-
+    
     ServoMechanism bottom_carriage = new ServoMechanism(
             bottom_carriage_observer, bottom_carriage_encoder,
             Constants.kBottomCarriageMotor1PDP,
@@ -68,6 +68,7 @@ public class SimRobot extends SimRobotBase {
         double updateRate = 500.0; // Hz
 
         // Initialize.
+        bottom_carriage_observer.setInvertedMotor(true);
         bottom_carriage.reset(Constants.kBottomCarriageHomePositionInches
                 * ELEVATOR_RADS_PER_INCH);
         top_carriage.reset(Constants.kTopCarriageHomePositionInches
