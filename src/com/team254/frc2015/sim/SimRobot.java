@@ -40,7 +40,7 @@ public class SimRobot extends SimRobotBase {
             bottom_carriage_observer, bottom_carriage_encoder,
             Constants.kBottomCarriageMotor1PDP,
             elevator_rads_per_tick, DCMotor.makeTransmission(
-                    DCMotor.makeRS775(), 2, 10.5, .8), 0.0,
+                    DCMotor.makeRS775(), 2, 10.48, .8), 0.0,
             new ServoMechanism.Limits(
                     Constants.kBottomCarriageMinPositionInches
                             * ELEVATOR_RADS_PER_INCH,
@@ -49,7 +49,7 @@ public class SimRobot extends SimRobotBase {
     ServoMechanism top_carriage = new ServoMechanism(top_carriage_observer,
             top_carriage_encoder, Constants.kTopCarriageMotor1PDP,
             elevator_rads_per_tick, DCMotor.makeTransmission(
-                    DCMotor.makeRS775(), 2, 10.5, .8), 0.0,
+                    DCMotor.makeRS775(), 2, 10.48, .8), 0.0,
             new ServoMechanism.Limits(Constants.kTopCarriageMinPositionInches
                     * ELEVATOR_RADS_PER_INCH,
                     Constants.kTopCarriageMaxPositionInches
