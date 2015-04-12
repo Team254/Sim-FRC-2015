@@ -30,6 +30,13 @@ public class DCMotor {
 		return new DCMotor(KT, KV, RESISTANCE);
 	}
 	
+	static DCMotor makeRS550() {
+	    final double KT = 0.004862;
+	    final double KV = 1608.0 * (Math.PI * 2.0) / 60.0;
+	    final double RESISTANCE = (12.0 / 85.0);
+	    return new DCMotor(KT, KV, RESISTANCE);
+	}
+	
 	static DCMotor makeTransmission(DCMotor motor, int num_motors, double gear_reduction,
 			double efficiency) {
 		return new DCMotor(num_motors * gear_reduction * efficiency * motor.m_kt,
@@ -70,23 +77,22 @@ public class DCMotor {
 	 * 
 	 * @param applied_voltage Voltage applied to the motor (V)
 	 * @param load Load applied to the motor (kg*m^2)
-	 * @param acceleration The external acceleration applied to the load
-	 * (ex. due to gravity) (rad/s^2)
+	 * @param acceleration The external torque applied (ex. due to gravity) (N*m)
 	 * @param timestep How long the input is applied (s)
 	 */
-	public void step(double applied_voltage, double load, double acceleration, double timestep) {
+	public void step(double applied_voltage, double load, double external_torque, double timestep) {
 		/*
 		 * Using the 971-style first order system model.
 		 * V = I * R + Kv * w
          * torque = Kt * I
          *
          * V = torque / Kt * R + Kv * w
-         * torque = J * dw/dt
+         * torque = J * dw/dt + external_torque
          *
-         * dw/dt = (V - Kv * w) * Kt / (R * J)
+         * dw/dt = (V - Kv * w) * Kt / (R * J) - external_torque / J
 		 */
-		acceleration += (applied_voltage - m_velocity / m_kv) * m_kt /
-				(m_resistance * load);
+		double acceleration = (applied_voltage - m_velocity / m_kv) * m_kt /
+				(m_resistance * load) + external_torque / load;
 		m_velocity += acceleration * timestep;
 		m_position += m_velocity * timestep + .5 * acceleration * timestep * timestep;
 		m_current = load * acceleration * Math.signum(applied_voltage) / m_kt;
