@@ -57,8 +57,6 @@ public class SimRobot extends SimRobotBase {
 
     @Override
     public void initSimRobot() {
-        System.out.println("sim robot init lol");
-
     }
 
     @Override
@@ -79,7 +77,7 @@ public class SimRobot extends SimRobotBase {
 
             @Override
             public void run() {
-                if (SolenoidStore.getSolenoid(0).get()) {
+                if (!SolenoidStore.getSolenoid(0).get()) {
                     bottom_carriage.setLoad(10.0 * KG_PER_LB
                             * Constants.kElevatorPulleyRadiusInches
                             * METERS_PER_INCH); // 10 lbs
@@ -89,10 +87,10 @@ public class SimRobot extends SimRobotBase {
                 }
                 if (bottom_carriage.m_output.getEncoder() != null) {
                 	int enc_val = bottom_carriage.m_output.getEncoder().get();
-                	bottom_carriage_hall_effect.set(enc_val > -50 && enc_val < 50); // about half an inch of travel, homing sensor
+                	bottom_carriage_hall_effect.set(!(enc_val > -15 && enc_val < 15)); // about half an inch of travel, homing sensor
                 }
 
-                if (SolenoidStore.getSolenoid(1).get()) {
+                if (!SolenoidStore.getSolenoid(1).get()) {
                     top_carriage.setLoad(10.0 * KG_PER_LB
                             * Constants.kElevatorPulleyRadiusInches
                             * METERS_PER_INCH); // 10 lbs
@@ -102,7 +100,7 @@ public class SimRobot extends SimRobotBase {
                 }
                 if (top_carriage.m_output.getEncoder() != null) {
                 	int enc_val = top_carriage.m_output.getEncoder().get();
-                	top_carriage_hall_effect.set(enc_val > -50 && enc_val < 50); // about half an inch of travel, homing sensor
+                	top_carriage_hall_effect.set(!(enc_val > 1000 && enc_val < 1020)); // about half an inch of travel, homing sensor
                 }
 
                 loop_counter++;
